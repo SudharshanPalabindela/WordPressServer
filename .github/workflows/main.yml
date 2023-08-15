@@ -23,10 +23,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y rsync
 
-      - name: Add EC2 host key to known_hosts
-        run: |
-          ssh-keyscan -H $EC2_IP_ADDRESS >> ~/.ssh/known_hosts
-
       - name: Push code to EC2
         run: |
           # Load the private key from GitHub Secrets
