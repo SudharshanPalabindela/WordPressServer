@@ -19,5 +19,5 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }} 
 
       - name: Push Code to EC2
-        run: |
-          rsync -avz --delete-after --exclude='.git' $GITHUB_WORKSPACE/ ubuntu@3.221.121.112:/var/www/html/wordpress/
+       run: |
+          rsync -avz --exclude '.git*' --exclude '.github' ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }}:${{ secrets.DEPLOY_PATH }} 
