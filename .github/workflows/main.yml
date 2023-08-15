@@ -23,6 +23,22 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y rsync
 
-      - name: Push Code to EC2
-       run: |
-          rsync -avz --exclude '.git*' --exclude '.github' ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }}:${{ secrets.DEPLOY_PATH }} 
+    nmae: push code ec2
+run: |
+  # Load the private key from GitHub Secrets (replace 'SSH_PRIVATE_KEY' with your secret name)
+  echo "$SSH_PRIVATE_KEY" > private_key.pem
+  chmod 600 private_key.pem
+
+  # Set IP address and directory paths
+  EC2_IP="$EC2_IP_ADDRESS"
+  SOURCE_DIR="$GITHUB_WORKSPACE/"
+  DEST_DIR="/var/www/html/wordpress/"
+
+  # Use rsync with SSH key authentication and compression
+  rsync -avz --delete-after --exclude='.git' -e "ssh -i private_key.pem" "$SOURCE_DIR" "ubuntu@$EC2_IP:$DEST_DIR"
+
+  # Clean up the private key file
+  rm private_key.pem
+env:
+  EC2_IP_ADDRESS: ${{ secrets.EC2_IP_ADDRESS }}
+  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
