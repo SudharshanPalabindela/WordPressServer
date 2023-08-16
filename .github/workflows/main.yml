@@ -13,38 +13,23 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'  # Set Node.js version to 16
-
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y rsync
+
+      - name: Install rsync
+        run: sudo apt-get update && sudo apt-get install -y rsync
 
       - name: Push code to EC2
         run: |
-          # Load the private key from GitHub Secrets
-          echo "$SSH_PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
-
           # Set IP address and directory paths
           EC2_IP="$EC2_IP_ADDRESS"
           SOURCE_DIR="$GITHUB_WORKSPACE/"
           DEST_DIR="/var/www/html/wordpress/"
 
           # Use rsync with SSH key authentication and compression
-          rsync -avz --delete-after --exclude='.git' -e "ssh -i private_key.pem" "$SOURCE_DIR" "ubuntu@$EC2_IP:$DEST_DIR"
-
-          # Clean up the private key file
-          rm private_key.pem
+          rsync -avz --delete-after --exclude='.git' -e "ssh -i $SSH_AUTH_SOCK" "$SOURCE_DIR" "ubuntu@$EC2_IP:$DEST_DIR"
 
         env:
           EC2_IP_ADDRESS: ${{ secrets.EC2_IP_ADDRESS }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
