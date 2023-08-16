@@ -106,7 +106,7 @@ git push -u origin main
 
 -   Set up a GitHub Actions workflow for automated deployment.
 
-## ** GitHub Actions Workflow**
+## **GitHub Actions Workflow**
 
 -   The GitHub Actions workflow automates the deployment process to the
     AWS EC2 instance.
