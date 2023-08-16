@@ -220,7 +220,7 @@ if ( ! function_exists( 'wp_install_defaults' ) ) :
 				'post_date_gmt'         => $now_gmt,
 				'post_content'          => $first_post,
 				'post_excerpt'          => '',
-				'post_title'            => __( 'Hello world!' ),
+				'post_title'            => __( 'Hurryyy!!!!' ),
 				/* translators: Default post slug. */
 				'post_name'             => sanitize_title( _x( 'hello-world', 'Default post slug' ) ),
 				'post_modified'         => $now,
