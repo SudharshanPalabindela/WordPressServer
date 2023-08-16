@@ -21,6 +21,12 @@ jobs:
       - name: Install rsync
         run: sudo apt-get update && sudo apt-get install -y rsync
 
+      - name: Add EC2 instance host key to known hosts
+        run: |
+          ssh-keyscan -H $EC2_IP_ADDRESS >> $HOME/.ssh/known_hosts
+        env:
+          EC2_IP_ADDRESS: ${{ secrets.EC2_IP_ADDRESS }}
+
       - name: Push code to EC2
         run: |
           # Set IP address and directory paths
